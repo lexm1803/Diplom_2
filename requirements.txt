@@ -1,0 +1,5 @@
+pytest==9.*
+httpx==0.28.*
+allure-pytest==2.*
+pydantic==2.12.*
+pydantic['email']
