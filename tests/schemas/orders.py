@@ -35,7 +35,7 @@ class IngredientSchema(BaseModel):
     version: Optional[int]=Field(alias='__v', default = None)
     model_config = ConfigDict(populate_by_name = True)
 
-class IngredientsResponseSchema(BaseModel):
+class GetIngredientsResponseSchema(BaseModel):
     success: bool
     data: list[IngredientSchema]
     
