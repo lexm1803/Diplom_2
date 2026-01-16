@@ -26,6 +26,7 @@ class UserClient(BaseClient):
         
         return self.patch(
             endpoint = '/api/auth/user',
+            request_model = update_data,
             success_model = UserFullResponseSchema,
             error_model = ErrorResponseSchema,
             auth_token = auth_token
