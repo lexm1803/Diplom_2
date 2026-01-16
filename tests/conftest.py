@@ -42,3 +42,18 @@ def unique_user(auth_client, user_client):
         user_client.delete_user(auth_token = access_token)
     except Exception as e:
         print(f'Ошибка при попытке удаления пользователя: \n{e}')
+
+@pytest.fixture
+def clean_up_register(user_client):
+    access = []
+    
+    def register(token):
+        access.append(token)
+        return access
+    
+    yield register
+    
+    try:
+        user_client.delete_user(auth_token = access[0])
+    except Exception as e:
+        print(f'Ошибка удаления пользователя: \n{e}')

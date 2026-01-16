@@ -38,3 +38,6 @@ class PartialRegisterUserRequestSchema(BaseModel):
     email: EmailStr | None = None
     password: str | None = None
     name: str | None = None
+
+class EmptyResponse(BaseModel):
+    pass

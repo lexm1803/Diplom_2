@@ -2,7 +2,8 @@ from tests.client.base_client import BaseClient
 from tests.schemas.auth import (
     UpdateUserRequestSchema,
     UserFullResponseSchema,
-    ErrorResponseSchema
+    ErrorResponseSchema,
+    EmptyResponse
 )
 
 
@@ -30,11 +31,11 @@ class UserClient(BaseClient):
             auth_token = auth_token
         )
     
-    def delete_user(self, auth_token: str) -> dict:
+    def delete_user(self, auth_token: str) -> EmptyResponse:
 
         response = self.delete(
             endpoint = '/api/auth/user',
-            success_model = dict,
+            success_model = EmptyResponse,
             error_model = ErrorResponseSchema,
             auth_token = auth_token
         )
