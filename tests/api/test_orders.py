@@ -53,14 +53,11 @@ class TestOrders:
     def test_create_order_with_invalid_id_ingredients(self, orders_client, unique_user):
         ingredients = CreateOrderRequestSchema(ingredients = ['invalid_id_1234'])
         
-        response, status_code = orders_client.create_order(
+        _, status_code = orders_client.create_order(
             auth_token = unique_user['access_token'],
             ingredients = ingredients
             )
 
-        #assert isinstance(response, ErrorResponseSchema)
-        #assert response.message == 'One or more ids provided are incorrect'
-        #assert response.success is False
         assert status_code == 500
 
     @allure.title('Получение заказов авторизованным пользователем')
