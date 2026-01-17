@@ -26,7 +26,7 @@ def orders_client(api_base_url):
 def unique_user(auth_client, user_client):
     user_data = UserBuilder().build()
     
-    register_response = auth_client.register(user_data)
+    register_response, _ = auth_client.register(user_data)
     access_token = register_response.access_token
     refresh_token = register_response.refresh_token
     

@@ -15,10 +15,10 @@ class CreateOrderResponseSchema(BaseModel):
 
 class GetUserOrdersResponseSchema(BaseModel):
     success: bool
-    orders: list[dict]
+    orders: list[ListOrderSchema]
     total: int
     total_today: int=Field(alias='totalToday')
-    model_config = ConfigDict(populate_by_name = True)
+    model_config = ConfigDict(populate_by_name = True, extra = 'forbid')
 
 class IngredientSchema(BaseModel):
     id: str=Field(alias='_id')
@@ -39,3 +39,11 @@ class GetIngredientsResponseSchema(BaseModel):
     success: bool
     data: list[IngredientSchema]
     
+class ListOrderSchema(BaseModel):
+    ingredients: list[str]
+    id: str=Field(alias='_id')
+    status: str
+    number: int
+    created_at: str=Field(alias='createdAt')
+    updated_at: str=Field(alias='updatedAt')
+    model_config = ConfigDict(populate_by_name = True)

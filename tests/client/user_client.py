@@ -9,37 +9,41 @@ from tests.schemas.auth import (
 
 class UserClient(BaseClient):
 
-    def get_user(self, auth_token: str) -> UserFullResponseSchema | ErrorResponseSchema:
+    def get_user(self, auth_token: str) -> tuple[UserFullResponseSchema | ErrorResponseSchema, int]:
 
-        return self.get(
+        response, status_code = self.get(
             endpoint = '/api/auth/user',
             success_model = UserFullResponseSchema,
             error_model = ErrorResponseSchema,
             auth_token = auth_token
         )
+
+        return response, status_code
     
     def update_user(
             self, 
             auth_token: str, 
             update_data: UpdateUserRequestSchema
-            ) -> UserFullResponseSchema | ErrorResponseSchema:
+            ) -> tuple[UserFullResponseSchema | ErrorResponseSchema, int]:
         
-        return self.patch(
+        response, status_code = self.patch(
             endpoint = '/api/auth/user',
             request_model = update_data,
             success_model = UserFullResponseSchema,
             error_model = ErrorResponseSchema,
             auth_token = auth_token
         )
-    
-    def delete_user(self, auth_token: str) -> EmptyResponse:
 
-        response = self.delete(
+        return response, status_code
+    
+    def delete_user(self, auth_token: str) -> tuple[EmptyResponse, int]:
+
+        response, status_code = self.delete(
             endpoint = '/api/auth/user',
             success_model = EmptyResponse,
             error_model = ErrorResponseSchema,
             auth_token = auth_token
         )
 
-        return response
+        return response, status_code
     

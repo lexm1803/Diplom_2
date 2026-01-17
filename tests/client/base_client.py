@@ -1,5 +1,5 @@
 import httpx
-from typing import Optional, Type, TypeVar, Union
+from typing import Optional, Type, TypeVar, Union, Tuple
 from pydantic import BaseModel
 
 
@@ -25,7 +25,7 @@ class BaseClient:
             success_model: Type[T], 
             error_model: Type[BaseModel], 
             auth_token: str = None
-            ) -> Union[T, BaseModel]:
+            ) -> Tuple:
         
         headers = self.build_headers(auth_token)
         
@@ -37,15 +37,17 @@ class BaseClient:
             json = json_data, 
             headers = headers
             )
-        
-        if 200 <= response.status_code < 300:
-            return success_model.model_validate_json(response.text)
+        status_code = response.status_code
+        parsed = None
+
+        if 200 <= status_code < 300:
+            parsed = success_model.model_validate_json(response.text)
         else:
             content_type = response.headers.get('content-type', '')
             if 'application/json' in content_type:
-                return error_model.model_validate_json(response.text)
-            else:
-                raise ValueError(f'Ответ не json объекта со статусом {response.status_code}')
+                parsed = error_model.model_validate_json(response.text)
+        return parsed, status_code
+            
     
     def post(
             self, 
@@ -54,9 +56,9 @@ class BaseClient:
             success_model: Type[T], 
             error_model: Type[BaseModel], 
             auth_token: str = None
-            ) -> Union[T, BaseModel]:
+            ) -> Tuple:
         
-        return self.send(
+        response, status_code = self.send(
             method = 'POST',
             endpoint = endpoint,
             request_model = request_model,
@@ -64,6 +66,8 @@ class BaseClient:
             error_model = error_model,
             auth_token = auth_token
         )
+
+        return response, status_code
     
     def get(
             self, 
@@ -72,15 +76,16 @@ class BaseClient:
             success_model: Type[T], 
             error_model: Type[BaseModel], 
             auth_token: str = None
-            ) -> Union[T, BaseModel]:
-        
-        return self.send(
+            ) -> Tuple:
+        response, status_code = self.send(
             method = 'GET',
             endpoint = endpoint,
             success_model = success_model,
             error_model = error_model,
             auth_token = auth_token
         )
+
+        return response, status_code
     
     def patch(
             self, 
@@ -90,9 +95,9 @@ class BaseClient:
             success_model: Type[T], 
             error_model: Type[BaseModel], 
             auth_token: str = None
-            ) -> Union[T, BaseModel]:
+            ) -> Tuple:
         
-        return self.send(
+        response, status_code = self.send(
             method = 'PATCH',
             endpoint = endpoint,
             request_model = request_model,
@@ -100,6 +105,8 @@ class BaseClient:
             error_model = error_model,
             auth_token = auth_token
         )
+
+        return response, status_code
     
     def delete(
             self, 
@@ -108,13 +115,15 @@ class BaseClient:
             success_model: Type[T], 
             error_model: Type[BaseModel], 
             auth_token: str = None
-            ) -> Union[T, BaseModel]:
+            ) -> Tuple:
         
-        return self.send(
+        response, status_code = self.send(
             method = 'DELETE',
             endpoint = endpoint,
             success_model = success_model,
             error_model = error_model,
             auth_token = auth_token
         )
+
+        return response, status_code
     

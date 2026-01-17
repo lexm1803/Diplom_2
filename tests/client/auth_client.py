@@ -4,6 +4,7 @@ from tests.schemas.auth import (
     LoginUserRequestSchema,
     LoginResponseSchema,
     ErrorResponseSchema,
+    EmptyResponse,
 )
 
 
@@ -12,40 +13,46 @@ class AuthClient(BaseClient):
     def register(
             self, 
             user_data: RegisterUserRequestSchema
-            ) -> LoginResponseSchema | ErrorResponseSchema:
+            ) -> tuple[LoginResponseSchema | ErrorResponseSchema, int]:
         
-        return self.post(
+        response, status_code = self.post(
             endpoint = '/api/auth/register',
             request_model = user_data,
             success_model = LoginResponseSchema,
             error_model = ErrorResponseSchema
         )
+
+        return response, status_code
     
     def login(
             self,
             creds: LoginUserRequestSchema,
-            ) -> LoginResponseSchema | ErrorResponseSchema:
+            ) -> tuple[LoginResponseSchema | ErrorResponseSchema, int]:
         
-        return self.post(
+        response, status_code = self.post(
             endpoint = '/api/auth/login',
             request_model = creds,
             success_model = LoginResponseSchema,
             error_model = ErrorResponseSchema
         )
+
+        return response, status_code
     
-    def logout(self, refresh_token: str,) -> dict:
+    def logout(self, refresh_token: str,) -> tuple[EmptyResponse, int]:
         
-        return self.post(
+        response, status_code = self.post(
             endpoint = '/api/auth/logout',
             request_model = None,
-            success_model = dict, 
+            success_model = EmptyResponse, 
             error_model = ErrorResponseSchema,
             auth_token = refresh_token
             )
-        
-    def refresh_token(self, refresh_token: str) -> LoginResponseSchema | ErrorResponseSchema:
 
-        return self.post(
+        return response, status_code
+        
+    def refresh_token(self, refresh_token: str) -> tuple[LoginResponseSchema | ErrorResponseSchema, int]:
+
+        response, status_code = self.post(
             endpoint = '/api/auth/token',
             request_model = None,
             success_model = LoginResponseSchema,
@@ -53,3 +60,4 @@ class AuthClient(BaseClient):
             auth_token = refresh_token
             )
     
+        return response, status_code
