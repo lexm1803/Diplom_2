@@ -97,3 +97,4 @@ class TestUser:
         assert response.success is False
         assert response.message == 'You should be authorised'
         assert status_code == 401
+        

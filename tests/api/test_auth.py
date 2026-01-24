@@ -68,3 +68,4 @@ class TestAuth:
         assert response.success is False
         assert response.message == 'email or password are incorrect'
         assert status_code == 401
+        

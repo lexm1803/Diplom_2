@@ -46,4 +46,5 @@ allure serve ./allure-results
 
 ## Переменные окружения
 
-`API_BASE_URL` — базовый URL API (по умолчанию: `https://stellarburgers.education-services.ru`)
+`API_BASE_URL` — базовый URL API (по умолчанию: `https://stellarburgers.education-services.ru`).
+
