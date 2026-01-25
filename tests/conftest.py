@@ -1,26 +1,23 @@
 import pytest
-import os
 from tests.client.auth_client import AuthClient
 from tests.client.user_client import UserClient
 from tests.client.orders_client import OrdersClient
 from tests.builders.user_builder import UserBuilder
 
 
-@pytest.fixture(scope = 'session')
-def api_base_url():
-    return os.getenv('API_BASE_URL', 'https://stellarburgers.education-services.ru')
+BASE_URL = 'https://stellarburgers.education-services.ru'
 
 @pytest.fixture
-def auth_client(api_base_url):
-    return AuthClient(base_url = api_base_url)
+def auth_client():
+    return AuthClient(base_url = BASE_URL)
 
 @pytest.fixture
-def user_client(api_base_url):
-    return UserClient(base_url = api_base_url)
+def user_client():
+    return UserClient(base_url = BASE_URL)
 
 @pytest.fixture
-def orders_client(api_base_url):
-    return OrdersClient(base_url = api_base_url)
+def orders_client():
+    return OrdersClient(base_url = BASE_URL)
 
 @pytest.fixture
 def unique_user(auth_client, user_client):
@@ -40,8 +37,8 @@ def unique_user(auth_client, user_client):
 
     try:
         user_client.delete_user(auth_token = access_token)
-    except Exception as e:
-        print(f'Ошибка при попытке удаления пользователя: \n{e}')
+    except Exception:
+        pass
 
 @pytest.fixture
 def clean_up_register(user_client):
@@ -55,5 +52,5 @@ def clean_up_register(user_client):
     
     try:
         user_client.delete_user(auth_token = access[0])
-    except Exception as e:
-        print(f'Ошибка удаления пользователя: \n{e}')
+    except Exception:
+        pass
